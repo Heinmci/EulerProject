@@ -4,8 +4,11 @@ fn main() {
 }
 
 fn get_nth_prime(nb: u32) -> u64 {
-    let mut counter = 5;
-    let mut nb_primes = 2;
+    if nb == 1 {
+        return 2;
+    }
+    let mut counter = 3;
+    let mut nb_primes = 1;
     loop {
         if is_prime(counter) {
             nb_primes += 1;
