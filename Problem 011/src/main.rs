@@ -52,86 +52,26 @@ fn get_biggest_adjacent_product(nb: usize) -> u64 {
 }
 
 fn get_horizontal_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {
-    let left_product = {
-        if col_nb as i8 - (nb - 1) as i8 >= 0 {
-            GRID[line_nb][col_nb - (nb - 1)..(col_nb + 1)].iter().fold(1, |acc, x| (acc * *x as u64) as u64)
-        } else {
-            0
-        }
-    };
-    
-    let right_product = {
-        if col_nb + nb <= WIDTH {
-           GRID[line_nb][col_nb..(col_nb + nb)].iter().fold(1, |acc, x| (acc * *x as u64) as u64)
-        } else {
-            0
-        }
-    };
-
-    if left_product > right_product {
-        left_product
+    if col_nb + nb <= WIDTH {
+        GRID[line_nb][col_nb..(col_nb + nb)].iter().fold(1, |acc, x| (acc * *x as u64) as u64)
     } else {
-        right_product
+        0
     }
 }
 
-fn get_vertical_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {
-    let up_product = {
-        if line_nb as i8 - (nb - 1) as i8 >= 0 {
-            let mut product: u64 = 1;
-            for el in (line_nb - (nb - 1))..(line_nb + 1) {
-                product *= GRID[el][col_nb] as u64;
-            }
-            product
-        } else {
-            0
+fn get_vertical_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {   
+    if line_nb + nb <= HEIGHT {
+        let mut product: u64 = 1;
+        for el in line_nb..(line_nb + nb) {
+            product *= GRID[el][col_nb] as u64;
         }
-    };
-    
-    let down_product = {
-        if line_nb + nb <= HEIGHT {
-            let mut product: u64 = 1;
-            for el in line_nb..(line_nb + nb) {
-                product *= GRID[el][col_nb] as u64;
-            }
-            product
-        } else {
-            0
-        }
-    };
-
-    if up_product > down_product {
-        up_product
+        product
     } else {
-        down_product
+        0
     }
 }
 
 fn get_diagonal_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {
-    let top_left_product = {
-        if (line_nb as i8 - (nb - 1) as i8 >= 0) && (col_nb as i8 - (nb - 1) as i8 >= 0) {
-            let mut product: u64 = 1;
-            for (index, el) in ((line_nb - (nb - 1))..(line_nb + 1)).rev().enumerate() {
-                product *= GRID[el][col_nb - index] as u64;
-            }
-            product
-        } else {
-            0
-        }
-    };
-    
-    let top_right_product = {
-        if (line_nb as i8 - (nb - 1) as i8 >= 0) && (col_nb + nb <= WIDTH) {
-            let mut product: u64 = 1;
-            for (index, el) in ((line_nb - (nb - 1))..(line_nb + 1)).rev().enumerate() {
-                product *= GRID[el][col_nb + index] as u64;
-            }
-            product
-        } else {
-            0
-        }
-    };
-
     let bottom_left_product = {
         if (line_nb + nb <= HEIGHT) && (col_nb as i8 - (nb - 1) as i8 >= 0) {
             let mut product: u64 = 1;
@@ -156,6 +96,10 @@ fn get_diagonal_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {
         }
     };
 
-    vec![top_left_product, top_right_product, bottom_left_product, bottom_right_product].into_iter().max().unwrap()
+    if bottom_left_product > bottom_right_product {
+        bottom_left_product
+    } else {
+        bottom_right_product
+    }
 }
 
