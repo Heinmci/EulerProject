@@ -28,3 +28,13 @@ fn is_prime(number: u64) -> bool {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_biggest_prime_factor(600851475143), 6857);
+    }
+}

@@ -37,3 +37,13 @@ fn get_chain_size(starting_number: u32) -> u32 {
 
     chain_size
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_biggest_chain(1_000_000), 837799);
+    }
+}

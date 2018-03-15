@@ -103,3 +103,12 @@ fn get_diagonal_product(line_nb: usize, col_nb: usize, nb: usize) -> u64 {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_biggest_adjacent_product(4), 70600674);
+    }
+}

@@ -6,3 +6,13 @@ fn main() {
 fn sum_of_multiples(limit: u32) -> u32 {
     (1..limit).filter(|x| x%3 == 0 || x%5 == 0).sum()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(sum_of_multiples(1000), 233168);
+    }
+}

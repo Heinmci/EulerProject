@@ -29,3 +29,14 @@ fn determine_output(x: u8, y: u8, max_x: u8, max_y: u8, value_cache: &RefCell<Ha
         value
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        let value_cache = RefCell::new(HashMap::new());
+        assert_eq!(get_number_of_paths_from(0, 0, 20, 20, &value_cache), 137846528820);
+    }
+}

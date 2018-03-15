@@ -34,3 +34,13 @@ fn clean_up_array(result: &mut [u8; 1000], mut current_array_length: usize) -> u
     }
     current_array_length
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_sum_of_digits(1000), 1366);
+    }
+}

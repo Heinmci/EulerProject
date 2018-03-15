@@ -33,3 +33,13 @@ fn is_prime(number: u64) -> bool {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_sum_of_primes_below(2000000), 142913828922);
+    }
+}

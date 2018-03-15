@@ -46,3 +46,12 @@ fn get_product(nb_string: &str) -> u64 {
     nb_string.chars().fold(1, |acc, x| acc * x.to_digit(10).unwrap() as u64)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_biggest_product(13), 23514624000);
+    }
+}

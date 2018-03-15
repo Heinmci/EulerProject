@@ -20,3 +20,13 @@ fn is_palydrome(number: u32) -> bool {
     let number_str = number.to_string();
     number_str == number_str.chars().rev().collect::<String>()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_biggest_palyndrome_product(999), 906609);
+    }
+}

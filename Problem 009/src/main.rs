@@ -32,3 +32,14 @@ fn get_pythagorean_triplet(sum: u32) -> Option<(u32, u32, u32)> {
 fn is_pythagorean_triplet(a: u32, b: u32, c: u32) -> bool {
     a.pow(2) + b.pow(2) == c.pow(2)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        let (a, b, c) = get_pythagorean_triplet(1000).unwrap();
+        assert_eq!(a * b * c, 31875000);
+    }
+}

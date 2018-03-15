@@ -44,3 +44,13 @@ fn get_nb_divisors(number: u32) -> u32 {
 
     nb_divisors
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(get_triangular_number_with_divisors(500), 76576500);
+    }
+}

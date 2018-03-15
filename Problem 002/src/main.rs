@@ -20,3 +20,13 @@ fn sum_fibo(limit: u32) -> u32 {
     }
     sum
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_correct_result() {
+        assert_eq!(sum_fibo(4000000), 4613732);
+    }
+}
