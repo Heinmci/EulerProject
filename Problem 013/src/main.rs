@@ -11,7 +11,7 @@ fn get_first_10_digits_of_sum(numbers: [[u32; 50]; 100]) -> u64 {
     let mut sum = [0; 55];
     let mut result: u64 = 0;
 
-    for i in 0..50 { // -1 parce que on a déjà donné le 2^1 au dessus
+    for i in 0..50 {
         for j in 0..100 {
             sum[i] += numbers[j][i];
         }
