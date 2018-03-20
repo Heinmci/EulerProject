@@ -9,7 +9,7 @@ fn get_sum_of_digits(factorial: u64) -> u64 {
 
     result[0] = 1;
     
-    for nb in 1..(factorial + 1) { // -1 parce que on a déjà donné le 2^1 au dessus
+    for nb in 1..(factorial + 1) {
         for j in 0..current_array_length {
             result[j] *= nb;
         }
