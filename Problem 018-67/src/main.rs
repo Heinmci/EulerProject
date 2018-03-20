@@ -24,57 +24,23 @@ fn get_numbers_from_file(file_name: &str) -> Vec<u32> {
 }
 
 fn get_biggest_path(pyramid: &Vec<Vec<PyramidTile>>) -> u32 {
-    let pyramid_top = &pyramid[0][0];
-    *pyramid_top.sum_to_this_point.borrow_mut() = pyramid_top.value;
-
-    for current_row in 1..pyramid.len() {
+    for current_row in (1..(pyramid.len())).rev() {
         let nb_values_for_row = pyramid[current_row].len();
-        for column in 0..nb_values_for_row {
-
-            if column > 0 {
-                deal_with_path(pyramid, current_row, column, Direction::TopLeft);
-                
+        
+        for column in 0..(nb_values_for_row - 1) {
+            let left_value = *pyramid[current_row][column].sum_to_this_point.borrow();
+            let right_value = *pyramid[current_row][column + 1].sum_to_this_point.borrow();
+            let top_value = pyramid[current_row - 1][column].value;
+            
+            if left_value > right_value {
+                *(&pyramid[current_row - 1][column].sum_to_this_point).borrow_mut() = top_value + left_value;
+            } else {
+                *(&pyramid[current_row - 1][column].sum_to_this_point).borrow_mut() = top_value + right_value;
             }
-            if column < nb_values_for_row -1 {
-                deal_with_path(pyramid, current_row, column, Direction::TopRight);
-            }
         }
     }
-
-    get_max_value_in_last_row(pyramid)
+    *pyramid[0][0].sum_to_this_point.borrow()
 }
-
-fn get_max_value_in_last_row(pyramid: &Vec<Vec<PyramidTile>>) -> u32 {
-    let nb_rows = pyramid.len();
-    let mut max = *pyramid[nb_rows -1][0].sum_to_this_point.borrow();
-    for column in 1..pyramid[nb_rows -1].len() {
-        let sum_to_this_point = *pyramid[nb_rows -1][column].sum_to_this_point.borrow();
-        if sum_to_this_point > max {
-            max = sum_to_this_point;
-        }
-    }
-
-    max
-}
-
-fn deal_with_path(pyramid: &Vec<Vec<PyramidTile>>, current_row: usize, column: usize, direction: Direction) {
-    let current_tile = &pyramid[current_row][column];
-    let sum_to_this_point = *current_tile.sum_to_this_point.borrow();
-    let previous_row_col_number = {
-        if direction == Direction::TopLeft {
-            column -1
-        } else {
-            column
-        }
-    };
-
-    let potential_new_sum = current_tile.value + *pyramid[current_row - 1][previous_row_col_number].sum_to_this_point.borrow();
-
-    if potential_new_sum > sum_to_this_point {
-        *current_tile.sum_to_this_point.borrow_mut() = potential_new_sum;
-    }
-}
-
 
 fn setup_pyramid(values: &[u32]) -> Vec<Vec<PyramidTile>> {
     let nb_rows = determine_nb_rows(values.len()).unwrap();
@@ -118,15 +84,9 @@ impl PyramidTile {
     pub fn new(value: u32) -> PyramidTile {
         PyramidTile {
             value,
-            sum_to_this_point: RefCell::new(0)
+            sum_to_this_point: RefCell::new(value)
         }
     }
-}
-
-#[derive(PartialEq)]
-enum Direction {
-    TopLeft,
-    TopRight
 }
 
 #[cfg(test)]
