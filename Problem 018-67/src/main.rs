@@ -5,8 +5,8 @@ use std::fs::File;
 
 fn main() {
     let values = get_numbers_from_file("numbers_problem_67.txt");
-    let pyramid = setup_pyramid(&values);
-    let solution = get_biggest_path(&pyramid);
+    let mut pyramid = setup_pyramid(&values);
+    let solution = get_biggest_path(&mut pyramid);
     
     println!("{:?}", solution);
 }
@@ -23,26 +23,27 @@ fn get_numbers_from_file(file_name: &str) -> Vec<u32> {
     numbers
 }
 
-fn get_biggest_path(pyramid: &Vec<Vec<PyramidTile>>) -> u32 {
+fn get_biggest_path(pyramid: &mut Vec<Vec<u32>>) -> u32 {
     for current_row in (1..(pyramid.len())).rev() {
         let nb_values_for_row = pyramid[current_row].len();
         
         for column in 0..(nb_values_for_row - 1) {
-            let left_value = *pyramid[current_row][column].sum_to_this_point.borrow();
-            let right_value = *pyramid[current_row][column + 1].sum_to_this_point.borrow();
-            let top_value = pyramid[current_row - 1][column].value;
+            let left_value = pyramid[current_row][column];
+            let right_value = pyramid[current_row][column + 1];
+            let top_value = pyramid[current_row - 1][column];
             
             if left_value > right_value {
-                *(&pyramid[current_row - 1][column].sum_to_this_point).borrow_mut() = top_value + left_value;
+                pyramid[current_row - 1][column] = top_value + left_value;
             } else {
-                *(&pyramid[current_row - 1][column].sum_to_this_point).borrow_mut() = top_value + right_value;
+                pyramid[current_row - 1][column] = top_value + right_value;
             }
         }
     }
-    *pyramid[0][0].sum_to_this_point.borrow()
+
+    pyramid[0][0]
 }
 
-fn setup_pyramid(values: &[u32]) -> Vec<Vec<PyramidTile>> {
+fn setup_pyramid(values: &[u32]) -> Vec<Vec<u32>> {
     let nb_rows = determine_nb_rows(values.len()).unwrap();
     let mut tiles = vec![];
     let mut current_index = 0;
@@ -50,8 +51,7 @@ fn setup_pyramid(values: &[u32]) -> Vec<Vec<PyramidTile>> {
     for current_row in 0..(nb_rows) {
         let mut row = vec![];
         for _ in 0..(current_row + 1) {
-            let tile = PyramidTile::new(values[current_index]);
-            row.push(tile);
+            row.push(values[current_index]);
             current_index += 1;
         }
         tiles.push(row);
@@ -74,21 +74,6 @@ fn determine_nb_rows(array_size: usize) -> Option<usize> {
     None
 }
 
-#[derive(Debug)]
-struct PyramidTile {
-    value: u32,
-    sum_to_this_point: RefCell<u32>
-}
-
-impl PyramidTile {
-    pub fn new(value: u32) -> PyramidTile {
-        PyramidTile {
-            value,
-            sum_to_this_point: RefCell::new(value)
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -96,14 +81,14 @@ mod tests {
     #[test]
     fn test_correct_result_problem_18() {
         let values = get_numbers_from_file("numbers_problem_18.txt");
-        let pyramid = setup_pyramid(&values);
-        assert_eq!(get_biggest_path(&pyramid), 1074);
+        let mut pyramid = setup_pyramid(&values);
+        assert_eq!(get_biggest_path(&mut pyramid), 1074);
     }
 
     #[test]
     fn test_correct_result_problem_67() {
         let values = get_numbers_from_file("numbers_problem_67.txt");
-        let pyramid = setup_pyramid(&values);
-        assert_eq!(get_biggest_path(&pyramid), 7273);
+        let mut pyramid = setup_pyramid(&values);
+        assert_eq!(get_biggest_path(&mut pyramid), 7273);
     }
 }
