@@ -1,26 +1,26 @@
-use std::cell::RefCell;
 use std::io::{BufReader,BufRead};
 use std::fs::File;
 
 
 fn main() {
-    let values = get_numbers_from_file("numbers_problem_67.txt");
-    let mut pyramid = setup_pyramid(&values);
+    let mut pyramid = get_pyarmid_from_file("numbers_problem_67.txt");
     let solution = get_biggest_path(&mut pyramid);
     
     println!("{:?}", solution);
 }
 
-fn get_numbers_from_file(file_name: &str) -> Vec<u32> {
-    let mut numbers = vec![];
+fn get_pyarmid_from_file(file_name: &str) -> Vec<Vec<u32>> {
+    let mut pyramid = vec![];
 
     let file = File::open(file_name).expect("Couldn't open file");
     for line in BufReader::new(file).lines() {
+        let mut row = vec![];
         for nb in line.unwrap().split(' ') {
-            numbers.push(nb.parse::<u32>().unwrap());
+            row.push(nb.parse::<u32>().unwrap());
         }
+        pyramid.push(row);
     }
-    numbers
+    pyramid
 }
 
 fn get_biggest_path(pyramid: &mut Vec<Vec<u32>>) -> u32 {
@@ -43,52 +43,19 @@ fn get_biggest_path(pyramid: &mut Vec<Vec<u32>>) -> u32 {
     pyramid[0][0]
 }
 
-fn setup_pyramid(values: &[u32]) -> Vec<Vec<u32>> {
-    let nb_rows = determine_nb_rows(values.len()).unwrap();
-    let mut tiles = vec![];
-    let mut current_index = 0;
-    
-    for current_row in 0..(nb_rows) {
-        let mut row = vec![];
-        for _ in 0..(current_row + 1) {
-            row.push(values[current_index]);
-            current_index += 1;
-        }
-        tiles.push(row);
-    }
-
-    tiles
-}
-
-fn determine_nb_rows(array_size: usize) -> Option<usize> {
-    let mut nb_values = 0;
-
-    for i in 0..array_size {
-        nb_values += i;
-
-        if nb_values == array_size {
-            return Some(i);
-        }
-    }
-
-    None
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     
     #[test]
     fn test_correct_result_problem_18() {
-        let values = get_numbers_from_file("numbers_problem_18.txt");
-        let mut pyramid = setup_pyramid(&values);
+        let mut pyramid = get_pyarmid_from_file("numbers_problem_18.txt");
         assert_eq!(get_biggest_path(&mut pyramid), 1074);
     }
 
     #[test]
     fn test_correct_result_problem_67() {
-        let values = get_numbers_from_file("numbers_problem_67.txt");
-        let mut pyramid = setup_pyramid(&values);
+        let mut pyramid = get_pyarmid_from_file("numbers_problem_67.txt");
         assert_eq!(get_biggest_path(&mut pyramid), 7273);
     }
 }
