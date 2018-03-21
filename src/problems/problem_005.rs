@@ -1,8 +1,9 @@
 pub fn solve(mut number: u32) -> u32 {
+    let original_number = number;
     'outer: loop {
         for i in 1..21 {
             if number % i != 0 {
-                number += 1;
+                number += original_number;
                 continue 'outer;
             }
         }
