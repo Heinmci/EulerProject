@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use common;
 
 pub fn solve(limit: u32) -> u32 {
     let mut value_cache = HashMap::new();
@@ -11,7 +12,7 @@ pub fn solve(limit: u32) -> u32 {
 
         let sum_of_divisors = {
             if value_cache.get(&i).is_none() {
-                value_cache.insert(i, get_proper_divisor_sum(i));
+                value_cache.insert(i, common::get_proper_divisor_sum(i));
             } 
             value_cache[&i]
         };
@@ -22,7 +23,7 @@ pub fn solve(limit: u32) -> u32 {
 
         let divisor_sum_of_sum = {
             if value_cache.get(&sum_of_divisors).is_none() {
-                value_cache.insert(sum_of_divisors, get_proper_divisor_sum(sum_of_divisors));
+                value_cache.insert(sum_of_divisors, common::get_proper_divisor_sum(sum_of_divisors));
             } 
             value_cache[&sum_of_divisors]
         };
@@ -36,25 +37,6 @@ pub fn solve(limit: u32) -> u32 {
 
     amicable_numbers.iter().sum()
 }
-
-fn get_proper_divisor_sum(number: u32) -> u32 {
-    let mut sum_divisors = 1;
-    let square_root = (number as f32).sqrt() as u32;
-    
-    if number % square_root == 0 {
-        sum_divisors += square_root;
-    }
-
-    for i in 2..square_root {
-        if number % i == 0 {
-            sum_divisors += i;
-            sum_divisors += number / i;
-        }
-    }
-
-    sum_divisors
-}
-
 
 #[cfg(test)]
 mod tests {
