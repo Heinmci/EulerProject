@@ -9,15 +9,24 @@ pub fn solve(limit: u32) -> u32 {
             continue;
         }
 
-        value_cache.entry(i).or_insert(get_proper_divisor_sum(i));
-        let sum_of_divisors = value_cache[&i];
-
+        let sum_of_divisors = {
+            if value_cache.get(&i).is_none() {
+                value_cache.insert(i, get_proper_divisor_sum(i));
+            } 
+            value_cache[&i]
+        };
+        
         if sum_of_divisors == i {
             continue;
         }
 
-        value_cache.entry(sum_of_divisors).or_insert(get_proper_divisor_sum(sum_of_divisors));
-        let divisor_sum_of_sum = value_cache[&sum_of_divisors];
+        let divisor_sum_of_sum = {
+            if value_cache.get(&sum_of_divisors).is_none() {
+                value_cache.insert(sum_of_divisors, get_proper_divisor_sum(sum_of_divisors));
+            } 
+            value_cache[&sum_of_divisors]
+        };
+
 
         if divisor_sum_of_sum == i {
             amicable_numbers.push(i);
