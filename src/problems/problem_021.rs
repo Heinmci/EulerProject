@@ -59,9 +59,14 @@ fn get_proper_divisor_sum(number: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(10000), 31626);
+        let start_time = PreciseTime::now();
+        let result = solve(10000);
+        let end_time = PreciseTime::now();
+        println!("Problem 21 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 31626);
     }
 }

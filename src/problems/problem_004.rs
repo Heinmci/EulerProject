@@ -19,9 +19,14 @@ fn is_palydrome(number: u32) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(999), 906609);
+        let start_time = PreciseTime::now();
+        let result = solve(999);
+        let end_time = PreciseTime::now();
+        println!("Problem 4 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 906609);
     }
 }

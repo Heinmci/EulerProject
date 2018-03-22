@@ -13,9 +13,14 @@ fn get_square_of_the_sum(limit: u64) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(101), 25164150);
+        let start_time = PreciseTime::now();
+        let result = solve(101);
+        let end_time = PreciseTime::now();
+        println!("Problem 6 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 25164150);
     }
 }

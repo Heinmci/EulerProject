@@ -89,9 +89,14 @@ fn get_words_for_nb() -> HashMap<u32, &'static str> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(1000), 21124);
+        let start_time = PreciseTime::now();
+        let result = solve(1000);
+        let end_time = PreciseTime::now();
+        println!("Problem 17 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 21124);
     }
 }

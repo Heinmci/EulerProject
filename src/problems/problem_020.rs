@@ -37,9 +37,14 @@ fn clean_up_array(result: &mut [u64; 1000], mut current_array_length: usize) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(100), 648);
+        let start_time = PreciseTime::now();
+        let result = solve(100);
+        let end_time = PreciseTime::now();
+        println!("Problem 20 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 648);
     }
 }

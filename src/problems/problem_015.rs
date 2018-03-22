@@ -31,10 +31,15 @@ fn determine_output(x: u8, y: u8, max_x: u8, max_y: u8, value_cache: &RefCell<Ha
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
+        let start_time = PreciseTime::now();
         let value_cache = RefCell::new(HashMap::new());
-        assert_eq!(solve(0, 0, 20, 20, &value_cache), 137846528820);
+        let result = solve(0, 0, 20, 20, &value_cache);
+        let end_time = PreciseTime::now();
+        println!("Problem 15 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 137846528820);
     }
 }

@@ -43,9 +43,14 @@ fn get_nb_divisors(number: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+    use time::PreciseTime;
+
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(500), 76576500);
+        let start_time = PreciseTime::now();
+        let result = solve(500);
+        let end_time = PreciseTime::now();
+        println!("Problem 12 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 76576500);
     }
 }

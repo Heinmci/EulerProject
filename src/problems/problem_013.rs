@@ -51,10 +51,15 @@ fn clean_up_array(result: &mut [u32; 55]) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
+        let start_time = PreciseTime::now();
         let numbers = get_numbers_from_file("ressources/numbers_problem_013.txt");
-        assert_eq!(solve(numbers), 5537376230);
+        let result = solve(numbers);
+        let end_time = PreciseTime::now();
+        println!("Problem 13 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 5537376230);
     }
 }

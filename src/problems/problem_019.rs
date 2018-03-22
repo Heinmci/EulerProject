@@ -39,10 +39,15 @@ pub fn solve(days_in_month: &[u8; 12]) -> u8 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
+        let start_time = PreciseTime::now();
         let days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        assert_eq!(solve(&days_in_month), 171);
+        let result = solve(&days_in_month);
+        let end_time = PreciseTime::now();
+        println!("Problem 19 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 171);
     }
 }

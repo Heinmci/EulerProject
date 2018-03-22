@@ -36,9 +36,14 @@ fn get_chain_size(starting_number: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(1_000_000), 837799);
+        let start_time = PreciseTime::now();
+        let result = solve(1_000_000);
+        let end_time = PreciseTime::now();
+        println!("Problem 14 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 837799);
     }
 }

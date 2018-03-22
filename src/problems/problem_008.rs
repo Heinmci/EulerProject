@@ -44,9 +44,14 @@ fn get_product(nb_string: &str) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(13), 23514624000);
+        let start_time = PreciseTime::now();
+        let result = solve(13);
+        let end_time = PreciseTime::now();
+        println!("Problem 8 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 23514624000);
     }
 }

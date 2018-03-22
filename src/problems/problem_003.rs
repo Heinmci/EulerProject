@@ -13,9 +13,14 @@ pub fn solve(number: u64) -> u64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(600851475143), 6857);
+        let start_time = PreciseTime::now();
+        let result = solve(600851475143);
+        let end_time = PreciseTime::now();
+        println!("Problem 3 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 6857);
     }
 }

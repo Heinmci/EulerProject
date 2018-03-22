@@ -21,9 +21,14 @@ fn is_pythagorean_triplet(a: u32, b: u32, c: u32) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(1000).unwrap(), 31875000);
+        let start_time = PreciseTime::now();
+        let result = solve(1000).unwrap();
+        let end_time = PreciseTime::now();
+        println!("Problem 9 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 31875000);
     }
 }

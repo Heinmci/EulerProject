@@ -38,11 +38,16 @@ pub fn solve(pyramid: &mut Vec<Vec<u32>>) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_correct_result() {
+        let start_time = PreciseTime::now();
         let mut pyramid = get_pyarmid_from_file("ressources/numbers_problem_018.txt");
-        assert_eq!(solve(&mut pyramid), 1074);
+        let result = solve(&mut pyramid);
+        let end_time = PreciseTime::now();
+        println!("Problem 18 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 1074);
     }
 
 }

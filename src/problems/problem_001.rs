@@ -5,9 +5,14 @@ pub fn solve(limit: u32) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
 
     #[test]
     fn test_correct_result() {
-        assert_eq!(solve(1000), 233168);
+        let start_time = PreciseTime::now();
+        let result = solve(1000);
+        let end_time = PreciseTime::now();
+        println!("Problem 1 took {} seconds.", start_time.to(end_time));
+        assert_eq!(result, 233168);
     }
 }
