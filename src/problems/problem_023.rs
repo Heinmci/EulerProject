@@ -3,7 +3,8 @@ use common;
 pub fn solve(limit: u32) -> u32 {
     let mut sum = 0;
     let abundant_numbers = get_abundant_numbers(limit);
-    'outer: for i in 1..limit {
+    println!("{:?}", abundant_numbers);
+    /*'outer: for i in 1..limit {
         for number in abundant_numbers.iter() {
             if *number > i {
                 break;
@@ -14,9 +15,22 @@ pub fn solve(limit: u32) -> u32 {
             }
         }
         sum += i;
+    }*/
+
+    for i in 1..limit {
+        sum += i;
+    }
+    let mut abundant_pair_sum: Vec<u32> = vec![];
+    for i in abundant_numbers.iter() {
+        for j in abundant_numbers.iter() {
+            let tmp_sum = i + j;
+            if tmp_sum < limit && !abundant_pair_sum.contains(&tmp_sum) {
+                abundant_pair_sum.push(tmp_sum);
+            }
+        }
     }
 
-    sum
+    sum - (abundant_pair_sum.iter().sum()) as u32
 }
 
 fn get_abundant_numbers(limit: u32) -> Vec<u32> {
