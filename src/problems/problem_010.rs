@@ -1,13 +1,8 @@
 use common;
+use rayon::prelude::*;
 
 pub fn solve(limit: u64) -> u64 {
-    let mut sum_of_primes = 2;
-    for counter in (3..limit).step_by(2) {
-        if common::is_prime(counter) {
-            sum_of_primes += counter;
-        }
-    }
-    sum_of_primes
+    (3..limit).into_par_iter().filter(|&x| common::is_prime(x)).sum::<u64>() + 2
 }
 
 #[cfg(test)]
