@@ -1,28 +1,27 @@
 use common;
 
 pub fn solve(limit: u32) -> u32 {
-    let mut sum = 0;
+    let mut sum = limit * (limit + 1) / 2;
+    let mut was_subtracted: Vec<bool> = vec![false; limit as usize + 1];
     let abundant_numbers = get_abundant_numbers(limit);
-    'outer: for i in 1..limit {
-        for number in abundant_numbers.iter() {
-            if *number > i {
-                break;
-            }
-
-            if abundant_numbers.contains(&(i - number)) {
-                continue 'outer;
+    
+    for i in abundant_numbers.iter() {
+        for j in abundant_numbers.iter() {
+            let tmp_sum = i + j;
+            if tmp_sum <= limit && !was_subtracted[tmp_sum as usize] {
+                was_subtracted[tmp_sum as usize] = true;
+                sum -= tmp_sum;
             }
         }
-        sum += i;
     }
-
-    sum 
+ 
+    sum
 }
 
 fn get_abundant_numbers(limit: u32) -> Vec<u32> {
     let mut numbers = vec![];
 
-    for i in 12..limit {
+    for i in 12..(limit + 1) {
         if common::get_proper_divisor_sum(i) > i {
             numbers.push(i);
         }
