@@ -1,16 +1,16 @@
 pub fn solve(permutation_nb: u32) -> u32 {
     let dictionnary = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let mut result = 0;
-
+    let length = dictionnary.len();
     let mut permutations = vec![];
 
-    for i in (1..dictionnary.len()).rev() {
+    for i in (1..length).rev() {
         permutations.push(factorial(i));
     }
     let nb_array = get_permutation(permutation_nb, permutations, dictionnary);
     
-    for i in 0..10 {
-        result += (nb_array[i]) as u32 * 10u32.pow(9 - i as u32);
+    for i in 0..length {
+        result += (nb_array[i]) as u32 * 10u32.pow((length - 1) as u32 - i as u32);
     }
     result
     
