@@ -2,5 +2,5 @@
 
 To see the time for each problem:
 ```
-cargo test --release -- --nocapture
+cargo test problems --release -- --nocapture
 ```
