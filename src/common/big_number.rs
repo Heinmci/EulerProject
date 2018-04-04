@@ -1,82 +1,136 @@
-pub fn sum_big_numbers(nb1: &Vec<u32>, nb2: &Vec<u32>) -> Vec<u32> {
-    let mut sum: Vec<u32> = nb2.iter().zip(nb1.iter()).map(|(a, b)| a + b).collect();
-    sum.extend_from_slice(&nb2[nb1.len()..]);
-
-    clean_up_big_number(&mut sum);
-    
-    sum
+#[derive(Clone)]
+pub struct BigNumber {
+    value: Vec<u8>
 }
 
-fn clean_up_big_number(result: &mut Vec<u32>) {
-    let start_length = result.len();
-    for index in 0.. {
-        if *result.last().unwrap() < 10 && index >= start_length {
-            break;
+impl BigNumber {
+    pub fn new(nb: u64) -> BigNumber {
+        BigNumber {
+            value: nb.to_string().chars().rev().map(|d| d.to_digit(10).unwrap() as u8).collect()
+        }
+    }
+
+    pub fn new_from_vec(value: Vec<u8>) -> BigNumber {
+        BigNumber {
+            value
+        }
+    }
+
+    pub fn new_from_string(nb: &str) -> BigNumber {
+        BigNumber {
+            value: nb.chars().rev().map(|d| d.to_digit(10).unwrap() as u8).collect()
+        }
+    }
+
+    pub fn value(&self) -> &Vec<u8> {
+        &self.value
+    }
+
+    pub fn value_mut(&mut self) -> &mut Vec<u8> {
+        &mut self.value
+    }
+
+    pub fn to_number(&self) -> u64 {
+        let mut result = 0;
+        for (index, value) in self.value.iter().enumerate() {
+            result += *value as u64 * 10u64.pow(index as u32);
         }
 
-        let current_value = result[index];
-        if current_value >= 10 {
-            let modulo = current_value % 10;
-            let division = current_value / 10;
-            result[index] = modulo;
+        result
+    }
 
-            if index == result.len() -1 {
-                result.push(division);
-            } else {
-                result[index + 1] += division;
+    fn clean_up(&mut self) {
+        let start_length = self.value.len();
+        for index in 0.. {
+            if *self.value.last().unwrap() < 10 && index >= start_length {
+                break;
+            }
+
+            let current_value = self.value[index];
+            if current_value >= 10 {
+                let modulo = current_value % 10;
+                let division = current_value / 10;
+                self.value[index] = modulo;
+
+                if index == self.value.len() -1 {
+                    self.value.push(division);
+                } else {
+                    self.value[index + 1] += division;
+                }
             }
         }
     }
 }
 
-pub fn big_number_to_number(big_number: &Vec<u32>) -> u64 {
-    let mut result = 0;
-    for (index, value) in big_number.iter().enumerate() {
-        result += *value as u64 * 10u64.pow(index as u32);
-    }
+pub fn sum_big_numbers(nb1: &BigNumber, nb2: &BigNumber) -> BigNumber {
+    let nb1_value = nb1.value();
+    let nb2_value = nb2.value();
+    let mut sum: Vec<u8> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
+    sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
 
-    result
+    let mut sum = BigNumber::new_from_vec(sum);
+    sum.clean_up();
+    
+    sum
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn create_big_number_from_nb() {
+        let result = BigNumber::new(123);
+        assert_eq!(result.value(), &vec![3, 2, 1]);
+    }
+
+    #[test]
+    fn create_big_number_from_string() {
+        let result = BigNumber::new_from_string("254");
+        assert_eq!(result.value(), &vec![4, 5, 2]);
+    }
+
+    #[test]
+    fn create_big_number_from_vec() {
+        let result = BigNumber::new_from_vec(vec![7, 6, 3]);
+        assert_eq!(result.value(), &vec![7, 6, 3]);
+    }
     
     #[test]
     fn test_conversion() {
-        let result = big_number_to_number(&vec![3, 2, 1]);
+        let result = BigNumber::new(123).to_number();
         assert_eq!(result, 123);
     }
 
     #[test]
     fn test_conversion2() {
-        let result = big_number_to_number(&vec![0, 3, 2, 1]);
+        let result = BigNumber::new(1230).to_number();
         assert_eq!(result, 1230);
     }
 
     #[test]
     fn test_sum_different_length() {
-        let result = sum_big_numbers(&vec![1, 2, 1], &vec![4, 5, 3, 7]);
-        assert_eq!(result, vec![5, 7, 4, 7]);
+        let result = sum_big_numbers(&BigNumber::new(121), &BigNumber::new(7354));
+        assert_eq!(result.to_number(), 7475);
     }
 
     #[test]
     fn test_sum_same_length() {
-        let result = sum_big_numbers(&vec![1, 2, 1], &vec![4, 5, 3]);
-        assert_eq!(result, vec![5, 7, 4]);
+        let result = sum_big_numbers(&BigNumber::new(342), &BigNumber::new(125));
+        assert_eq!(result.to_number(), 467);
     }
 
     #[test]
     fn test_clean_up() {
-        let mut nb = vec![11, 2, 13];
-        clean_up_big_number(&mut nb);
-        assert_eq!(nb, vec![1, 3, 3, 1]);
+        let mut nb = BigNumber::new_from_vec(vec![11, 2, 13]);
+        nb.clean_up();
+        assert_eq!(nb.value(), &vec![1, 3, 3, 1]);
     }
 
     #[test]
     fn test_clean_up2() {
-        let mut nb = vec![11, 2, 13, 9, 9];
-        clean_up_big_number(&mut nb);
-        assert_eq!(nb, vec![1, 3, 3, 0, 0, 1]);
+        let mut nb = BigNumber::new_from_vec(vec![11, 2, 13, 9, 9]);
+        nb.clean_up();
+        assert_eq!(nb.value(), &vec![1, 3, 3, 0, 0, 1]);
     }
 }

@@ -1,7 +1,7 @@
 use common::fibonacci;
 
 pub fn solve(nb: u32) -> usize {
-    fibonacci::Fibonacci::new().into_iter().position(|x| x.len() == nb as usize).unwrap() + 1 // We add 1 because we start array at position 0
+    fibonacci::Fibonacci::new().into_iter().position(|x| x.value().len() == nb as usize).unwrap() + 1 // We add 1 because we start array at position 0
 }
 
 

@@ -1,16 +1,17 @@
 use std::mem;
 use super::big_number;
+use super::big_number::{BigNumber};
 
 
 pub struct Fibonacci {
-    current: Vec<u32>,
-    next: Vec<u32>,
+    current: BigNumber,
+    next: BigNumber,
 }
 
 impl Iterator for Fibonacci {
-    type Item = Vec<u32>;
+    type Item = BigNumber;
     
-    fn next(&mut self) -> Option<Vec<u32>> {
+    fn next(&mut self) -> Option<BigNumber> {
         let return_current = self.current.clone(); // We start by returning first element of fibo sequence
         let new_next = big_number::sum_big_numbers(&self.current, &self.next);
 
@@ -23,7 +24,7 @@ impl Iterator for Fibonacci {
 
 impl Fibonacci {
     pub fn new() -> Fibonacci {
-        Fibonacci { current: vec![1], next: vec![1] }
+        Fibonacci { current: BigNumber::new(1), next: BigNumber::new(1) }
     }
 }
 
@@ -34,13 +35,17 @@ mod tests {
     
     #[test]
     fn test_fibo_sequence() {
-        let fibo_sequence = Fibonacci::new().into_iter().take(3).collect::<Vec<Vec<u32>>>();
-        assert_eq!(fibo_sequence, [[1], [1], [2]]);
+        let fibo_sequence = Fibonacci::new().into_iter().take(3).collect::<Vec<BigNumber>>();
+        assert_eq!(fibo_sequence[0].value(), &vec![1]);
+        assert_eq!(fibo_sequence[1].value(), &vec![1]);
+        assert_eq!(fibo_sequence[2].value(), &vec![2]);
     }
 
     #[test]
     fn test_other_fibo_sequence() {
-        let fibo_sequence = Fibonacci::new().into_iter().skip(3).take(3).collect::<Vec<Vec<u32>>>();
-        assert_eq!(fibo_sequence, [[3], [5], [8]]);
+        let fibo_sequence = Fibonacci::new().into_iter().skip(3).take(3).collect::<Vec<BigNumber>>();
+        assert_eq!(fibo_sequence[0].value(), &vec![3]);
+        assert_eq!(fibo_sequence[1].value(), &vec![5]);
+        assert_eq!(fibo_sequence[2].value(), &vec![8]);
     }
 }
