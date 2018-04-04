@@ -11,12 +11,12 @@ pub fn get_nth_digit_fibo(nb: u32) -> u64 {
     let mut nb2 = vec![2];
     let mut index: u64 = 3;
     loop {
-        let next_number = sum_big_nunmbers(&nb1, &nb2);
-
-        if next_number.len() == nb as usize {
+        if nb2.len() == nb as usize {
             break;
         }
 
+        let next_number = sum_big_nunmbers(&nb1, &nb2);
+        
         nb1 = nb2;
         nb2 = next_number;
        
@@ -30,12 +30,14 @@ fn sum_big_nunmbers(nb1: &Vec<u32>, nb2: &Vec<u32>) -> Vec<u32> {
     sum.extend_from_slice(&nb2[nb1.len()..]);
 
     clean_up_big_number(&mut sum);
+    
     sum
 }
 
 fn clean_up_big_number(result: &mut Vec<u32>) {
+    let start_length = result.len();
     for index in 0.. {
-        if *result.last().unwrap() < 10 {
+        if *result.last().unwrap() < 10 && index >= start_length {
             break;
         }
 
