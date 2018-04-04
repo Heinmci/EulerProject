@@ -1,3 +1,6 @@
+pub mod fibonacci;
+pub mod big_number;
+
 pub fn is_prime(number: u64) -> bool {
     match number {
         0 | 1 => false,
@@ -33,3 +36,4 @@ pub fn get_proper_divisor_sum(number: u32) -> u32 {
 
     sum_divisors
 }
+

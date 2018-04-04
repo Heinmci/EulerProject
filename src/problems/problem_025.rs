@@ -1,60 +1,9 @@
-pub fn solve(nb: u32) -> u64 {
-    get_nth_digit_fibo(nb)
+use common::fibonacci;
+
+pub fn solve(nb: u32) -> usize {
+    fibonacci::Fibonacci::new().into_iter().position(|x| x.len() == nb as usize).unwrap() + 1 // We add 1 because we start array at position 0
 }
 
-pub fn get_nth_digit_fibo(nb: u32) -> u64 {
-    if nb == 1 || nb == 2 {
-        return 1;
-    }
-
-    let mut nb1 = vec![1];
-    let mut nb2 = vec![2];
-    let mut index: u64 = 3;
-    loop {
-        if nb2.len() == nb as usize {
-            break;
-        }
-
-        let next_number = sum_big_nunmbers(&nb1, &nb2);
-        
-        nb1 = nb2;
-        nb2 = next_number;
-       
-        index += 1;
-    }
-    index
-}
-
-fn sum_big_nunmbers(nb1: &Vec<u32>, nb2: &Vec<u32>) -> Vec<u32> {
-    let mut sum: Vec<u32> = nb2.iter().zip(nb1.iter()).map(|(a, b)| a + b).collect();
-    sum.extend_from_slice(&nb2[nb1.len()..]);
-
-    clean_up_big_number(&mut sum);
-    
-    sum
-}
-
-fn clean_up_big_number(result: &mut Vec<u32>) {
-    let start_length = result.len();
-    for index in 0.. {
-        if *result.last().unwrap() < 10 && index >= start_length {
-            break;
-        }
-
-        let current_value = result[index];
-        if current_value >= 10 {
-            let modulo = current_value % 10;
-            let division = current_value / 10;
-            result[index] = modulo;
-
-            if index == result.len() -1 {
-                result.push(division);
-            } else {
-                result[index + 1] += division;
-            }
-        }
-    }
-}
 
 #[cfg(test)]
 mod tests {
