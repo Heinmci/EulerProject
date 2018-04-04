@@ -26,16 +26,8 @@ pub fn get_nth_digit_fibo(nb: u32) -> u64 {
 }
 
 fn sum_big_nunmbers(nb1: &Vec<u32>, nb2: &Vec<u32>) -> Vec<u32> {
-    let mut sum = vec![];
-    for index in 0..nb1.len() {
-        sum.push(nb1[index] + nb2[index]);
-    }
-
-    if nb2.len() > nb1.len() {
-        for index in nb1.len()..nb2.len() {
-            sum.push(nb2[index]);
-        }
-    }
+    let mut sum: Vec<u32> = nb2.iter().zip(nb1.iter()).map(|(a, b)| a + b).collect();
+    sum.extend_from_slice(&nb2[nb1.len()..]);
 
     clean_up_big_number(&mut sum);
     sum
