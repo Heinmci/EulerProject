@@ -16,8 +16,8 @@ pub fn solve(factorial: u64) -> u64 {
 
 fn clean_up_array(result: &mut [u64; 1000], mut current_array_length: usize) -> usize{
     let start_array_length = current_array_length;
-    for k in 0..1000 {
-        if current_array_length > start_array_length && result[k] == 0 {
+    for k in 0.. {
+        if k > start_array_length && result[k] == 0 {
             break;
         }
         let current_value = result[k];
