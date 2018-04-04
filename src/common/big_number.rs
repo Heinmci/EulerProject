@@ -1,16 +1,16 @@
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct BigNumber {
-    value: Vec<u8>
+    value: Vec<u32>
 }
 
 impl BigNumber {
     pub fn new(nb: u64) -> BigNumber {
         BigNumber {
-            value: nb.to_string().chars().rev().map(|d| d.to_digit(10).unwrap() as u8).collect()
+            value: nb.to_string().chars().rev().map(|d| d.to_digit(10).unwrap() as u32).collect()
         }
     }
 
-    pub fn new_from_vec(value: Vec<u8>) -> BigNumber {
+    pub fn new_from_vec(value: Vec<u32>) -> BigNumber {
         BigNumber {
             value
         }
@@ -18,15 +18,15 @@ impl BigNumber {
 
     pub fn new_from_string(nb: &str) -> BigNumber {
         BigNumber {
-            value: nb.chars().rev().map(|d| d.to_digit(10).unwrap() as u8).collect()
+            value: nb.chars().rev().map(|d| d.to_digit(10).unwrap() as u32).collect()
         }
     }
 
-    pub fn value(&self) -> &Vec<u8> {
+    pub fn value(&self) -> &Vec<u32> {
         &self.value
     }
 
-    pub fn value_mut(&mut self) -> &mut Vec<u8> {
+    pub fn value_mut(&mut self) -> &mut Vec<u32> {
         &mut self.value
     }
 
@@ -37,6 +37,14 @@ impl BigNumber {
         }
 
         result
+    }
+
+    pub fn mul_with_nb(&mut self, nb: u32) {
+        //self.value.iter_mut().map(|x| *x * nb);
+        for value in self.value.iter_mut() {
+            *value *= nb
+        }
+        self.clean_up();
     }
 
     fn clean_up(&mut self) {
@@ -65,7 +73,7 @@ impl BigNumber {
 pub fn sum_big_numbers(nb1: &BigNumber, nb2: &BigNumber) -> BigNumber {
     let nb1_value = nb1.value();
     let nb2_value = nb2.value();
-    let mut sum: Vec<u8> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
+    let mut sum: Vec<u32> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
     sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
 
     let mut sum = BigNumber::new_from_vec(sum);
@@ -132,5 +140,12 @@ mod tests {
         let mut nb = BigNumber::new_from_vec(vec![11, 2, 13, 9, 9]);
         nb.clean_up();
         assert_eq!(nb.value(), &vec![1, 3, 3, 0, 0, 1]);
+    }
+
+    #[test]
+    fn test_mul() {
+        let mut nb = BigNumber::new(1234);
+        nb.mul_with_nb(5);
+        assert_eq!(nb.value(), &vec![0, 7, 1, 6]);
     }
 }
