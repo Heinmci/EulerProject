@@ -1,5 +1,4 @@
 use std::mem;
-use super::big_number;
 use super::big_number::{BigNumber};
 
 #[derive(Debug)]
@@ -13,7 +12,7 @@ impl Iterator for Fibonacci {
     
     fn next(&mut self) -> Option<BigNumber> {
         let mut return_current = BigNumber::new(0);
-        let new_next = big_number::sum_big_numbers(&self.current, &self.next);
+        let new_next = &self.current + &self.next;
         // How to do this cleaner?
         mem::swap(&mut return_current, &mut self.current);
         mem::swap(&mut self.current, &mut self.next);
@@ -63,7 +62,7 @@ mod tests {
     #[ignore]
     #[test]
     fn test_bigger_fibo_sequence2() {
-        let fibo_sequence = Fibonacci::new().into_iter().take(100_000).fold(BigNumber::new(0), |acc, x| big_number::sum_big_numbers(&acc, &x)).to_number();
+        let fibo_sequence = Fibonacci::new().into_iter().take(100_000).fold(BigNumber::new(0), |acc, x| &acc + &x).to_number();
         assert_eq!(fibo_sequence, 17160773352933361367);
     }
 }

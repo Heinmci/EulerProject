@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 #[derive(Debug, Clone)]
 pub struct BigNumber {
     value: Vec<u32>
@@ -11,15 +13,29 @@ impl BigNumber {
     }
 
     pub fn new_from_vec(value: Vec<u32>) -> BigNumber {
-        BigNumber {
-            value
+        if value.len() == 0 {
+            BigNumber {
+                value: vec![0]
+            }
+        } else {
+            BigNumber {
+                value
+            }
         }
+        
     }
 
     pub fn new_from_string(nb: &str) -> BigNumber {
-        BigNumber {
-            value: nb.chars().rev().map(|d| d.to_digit(10).unwrap() as u32).collect()
+        if nb.len() == 0 {
+            BigNumber {
+                value: vec![0]
+            }
+        } else {
+            BigNumber {
+                value: nb.chars().rev().map(|d| d.to_digit(10).unwrap() as u32).collect()
+            }
         }
+        
     }
 
     pub fn value(&self) -> &Vec<u32> {
@@ -31,7 +47,7 @@ impl BigNumber {
     }
 
     pub fn is_even(&self) -> bool {
-        self.value()[0] % 2 == 0
+        self.value[0] % 2 == 0
     }
 
     // TODO: Make this return Option<u64> if nb > <u64>::max_value()
@@ -75,21 +91,25 @@ impl BigNumber {
     }
 }
 
-pub fn sum_big_numbers(nb1: &BigNumber, nb2: &BigNumber) -> BigNumber {
-    let nb1_value = nb1.value();
-    let nb2_value = nb2.value();
-    let mut sum: Vec<u32> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
+impl<'a, 'b> Add<&'b BigNumber> for &'a BigNumber {
+    type Output = BigNumber;
 
-    if nb1.value().len() > nb2.value().len() {
-        sum.extend_from_slice(&nb1_value[nb2_value.len()..]);
-    } else {
-        sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
+    fn add(self, other: &'b BigNumber) -> BigNumber {
+        let nb1_value = self.value();
+        let nb2_value = other.value();
+        let mut sum: Vec<u32> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
+
+        if self.value().len() > other.value().len() {
+            sum.extend_from_slice(&nb1_value[nb2_value.len()..]);
+        } else {
+            sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
+        }
+
+        let mut sum = BigNumber::new_from_vec(sum);
+        sum.clean_up();
+        
+        sum
     }
-
-    let mut sum = BigNumber::new_from_vec(sum);
-    sum.clean_up();
-    
-    sum
 }
 
 #[cfg(test)]
@@ -128,19 +148,19 @@ mod tests {
 
     #[test]
     fn test_sum_different_length() {
-        let result = sum_big_numbers(&BigNumber::new(121), &BigNumber::new(7354));
+        let result = &BigNumber::new(121) + &BigNumber::new(7354);
         assert_eq!(result.to_number(), 7475);
     }
 
     #[test]
     fn test_sum_different_length2() {
-        let result = sum_big_numbers(&BigNumber::new_from_vec(vec![2, 1]), &BigNumber::new_from_vec(vec![8]));
+        let result = &BigNumber::new_from_vec(vec![2, 1]) + &BigNumber::new_from_vec(vec![8]);
         assert_eq!(result.value(), &vec![0, 2]);
     }
 
     #[test]
     fn test_sum_same_length() {
-        let result = sum_big_numbers(&BigNumber::new(342), &BigNumber::new(125));
+        let result = &BigNumber::new(342) + &BigNumber::new(125);
         assert_eq!(result.to_number(), 467);
     }
 
