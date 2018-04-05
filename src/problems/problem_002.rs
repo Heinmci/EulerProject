@@ -1,19 +1,13 @@
-pub fn solve(limit: u32) -> u32 {
-    let mut sum = 2;
-    let mut nb_1 = 1;
-    let mut nb_2 = 2;
-    loop {
-        let next_number = nb_1 + nb_2;
-        if next_number > limit {
-            break;
-        }
-        nb_1 = nb_2;
-        nb_2 = next_number;
-        if next_number%2 == 0 {
-            sum += next_number;
-        }
-    }
-    sum
+use common::fibonacci::Fibonacci;
+use common::big_number::BigNumber;
+use common::big_number;
+
+pub fn solve(limit: u64) -> u64 {
+    Fibonacci::new().into_iter()
+                    .take_while(|x| x.to_number() <= limit)
+                    .filter(|x| x.is_even())
+                    .fold(BigNumber::new(0), |acc, x| big_number::sum_big_numbers(&acc, &x))
+                    .to_number()
 }
 
 #[cfg(test)]
@@ -29,4 +23,5 @@ mod tests {
         println!("Problem 2 took {} seconds.", start_time.to(end_time));
         assert_eq!(result, 4613732);
     }
+    
 }
