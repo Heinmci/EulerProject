@@ -1,8 +1,8 @@
-use common;
+use common::prime;
 use rayon::prelude::*;
 
 pub fn solve(limit: u64) -> u64 {
-    (3..limit).into_par_iter().filter(|&x| common::is_prime(x)).sum::<u64>() + 2
+    (3..limit).into_par_iter().filter(|&x| prime::is_prime(x)).sum::<u64>() + 2
 }
 
 #[cfg(test)]

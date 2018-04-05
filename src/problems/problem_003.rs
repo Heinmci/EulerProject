@@ -1,9 +1,10 @@
-use common;
+use common::prime;
 use rayon::prelude::*;
 
 pub fn solve(number: u64) -> u64 {
     // Seems faster than reversing range, collecting and doing find_first (can't use rev on rayon Iter<u64>)
-    (2..((number as f64).sqrt() as u64 + 1)).into_par_iter().find_last(|&x| number % x == 0 && common::is_prime(x)).unwrap()
+    (2..((number as f64).sqrt() as u64 + 1)).into_par_iter().find_last(|&x| number % x == 0 && prime::is_prime(x)).unwrap()
+    //PrimeSequence::new().into_iter().take_while(|x| x <= &root).filter(|x| number % x == 0).max().unwrap()
 }
 
 #[cfg(test)]
