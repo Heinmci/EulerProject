@@ -30,6 +30,11 @@ impl BigNumber {
         &mut self.value
     }
 
+    pub fn is_even(&self) -> bool {
+        self.value()[0] % 2 == 0
+    }
+
+    // TODO: Make this return Option<u64> if nb > <u64>::max_value()
     pub fn to_number(&self) -> u64 {
         let mut result = 0;
         for (index, value) in self.value.iter().enumerate() {
@@ -74,7 +79,12 @@ pub fn sum_big_numbers(nb1: &BigNumber, nb2: &BigNumber) -> BigNumber {
     let nb1_value = nb1.value();
     let nb2_value = nb2.value();
     let mut sum: Vec<u32> = nb2_value.iter().zip(nb1_value.iter()).map(|(a, b)| a + b).collect();
-    sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
+
+    if nb1.value().len() > nb2.value().len() {
+        sum.extend_from_slice(&nb1_value[nb2_value.len()..]);
+    } else {
+        sum.extend_from_slice(&nb2_value[nb1_value.len()..]);
+    }
 
     let mut sum = BigNumber::new_from_vec(sum);
     sum.clean_up();
@@ -120,6 +130,12 @@ mod tests {
     fn test_sum_different_length() {
         let result = sum_big_numbers(&BigNumber::new(121), &BigNumber::new(7354));
         assert_eq!(result.to_number(), 7475);
+    }
+
+    #[test]
+    fn test_sum_different_length2() {
+        let result = sum_big_numbers(&BigNumber::new_from_vec(vec![2, 1]), &BigNumber::new_from_vec(vec![8]));
+        assert_eq!(result.value(), &vec![0, 2]);
     }
 
     #[test]
