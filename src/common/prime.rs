@@ -87,6 +87,7 @@ enum Identifier {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use time::PreciseTime;
     
     #[test]
     fn test_prime_sequence() {
@@ -102,7 +103,10 @@ mod tests {
 
     #[test]
     fn get_millionth_prime() {
+        let start_time = PreciseTime::now();
         let prime = PrimeSequence::new().into_iter().nth(999_999).unwrap();
+        let end_time = PreciseTime::now();
+        println!("Millionth prime took: {}", start_time.to(end_time));
         assert_eq!(prime, 15_485_863);
     }
 }
