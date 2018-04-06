@@ -63,6 +63,6 @@ mod tests {
     #[test]
     fn test_bigger_fibo_sequence2() {
         let fibo_sequence = Fibonacci::new().into_iter().take(100_000).fold(BigNumber::new(0), |acc, x| &acc + &x).to_number();
-        assert_eq!(fibo_sequence, 17160773352933361367);
+        assert_eq!(fibo_sequence, Some(17160773352933361367));
     }
 }

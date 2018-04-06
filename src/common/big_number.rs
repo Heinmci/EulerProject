@@ -1,6 +1,8 @@
 use std::ops::Add;
+use std::fmt;
+use std::cmp::Ordering;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq)]
 pub struct BigNumber {
     value: Vec<u32>
 }
@@ -50,14 +52,17 @@ impl BigNumber {
         self.value[0] % 2 == 0
     }
 
-    // TODO: Make this return Option<u64> if nb > <u64>::max_value()
-    pub fn to_number(&self) -> u64 {
+    pub fn to_number(&self) -> Option<u64> {
+        if self > &BigNumber::new(u64::max_value()) {
+            return None;
+        }
+
         let mut result = 0;
         for (index, value) in self.value.iter().enumerate() {
             result += *value as u64 * 10u64.pow(index as u32);
         }
 
-        result
+        Some(result)
     }
 
     pub fn mul_with_nb(&mut self, nb: u32) {
@@ -87,6 +92,44 @@ impl BigNumber {
                     self.value[index + 1] += division;
                 }
             }
+        }
+    }
+}
+
+impl fmt::Display for BigNumber {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let nb: String = self.value.iter().rev().map(|x| x.to_string()).collect();
+        write!(f, "{}", nb)
+    }
+}
+
+impl PartialEq for BigNumber {
+    fn eq(&self, other: &BigNumber) -> bool {
+        &self.value == other.value()
+    }
+}
+
+impl PartialOrd for BigNumber {
+    fn partial_cmp(&self, other: &BigNumber) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for BigNumber {
+    fn cmp(&self, other: &BigNumber) -> Ordering {
+        if self.value.len() > other.value().len() {
+            Ordering::Greater
+        } else if other.value().len() > self.value.len() {
+            Ordering::Less
+        } else {
+            for (i, j) in self.value.iter().rev().zip(other.value().iter().rev()) {
+                if i > j {
+                    return Ordering::Greater;
+                } else if j > i {
+                    return Ordering::Less;
+                }
+            }
+            Ordering::Equal
         }
     }
 }
@@ -137,19 +180,31 @@ mod tests {
     #[test]
     fn test_conversion() {
         let result = BigNumber::new(123).to_number();
-        assert_eq!(result, 123);
+        assert_eq!(result, Some(123));
     }
 
     #[test]
     fn test_conversion2() {
-        let result = BigNumber::new(1230).to_number();
-        assert_eq!(result, 1230);
+        let result = BigNumber::new(u64::max_value()).to_number();
+        assert_eq!(result, Some(18446744073709551615));
+    }
+
+    #[test]
+    fn test_conversion3() {
+        let result = BigNumber::new_from_string("12331218446744073709551615").to_number();
+        assert_eq!(result, None);
     }
 
     #[test]
     fn test_sum_different_length() {
         let result = &BigNumber::new(121) + &BigNumber::new(7354);
-        assert_eq!(result.to_number(), 7475);
+        assert_eq!(result.to_number(), Some(7475));
+    }
+
+    #[test]
+    fn test_sum_huge_numbers() {
+        let result = &BigNumber::new_from_string("16149477494985994798798798789754562331214189879875642132") + &BigNumber::new_from_string("259");
+        assert_eq!(result.to_string(), "16149477494985994798798798789754562331214189879875642391");
     }
 
     #[test]
@@ -161,7 +216,31 @@ mod tests {
     #[test]
     fn test_sum_same_length() {
         let result = &BigNumber::new(342) + &BigNumber::new(125);
-        assert_eq!(result.to_number(), 467);
+        assert_eq!(result.to_number(), Some(467));
+    }
+
+    #[test]
+    fn test_comparaison() {
+        let result = &BigNumber::new(3421) > &BigNumber::new(125);
+        assert_eq!(result, true);
+    }
+
+    #[test]
+    fn test_comparaison2() {
+        let result = &BigNumber::new(421) > &BigNumber::new(525);
+        assert_eq!(result, false);
+    }
+
+    #[test]
+    fn test_comparaison3() {
+        let result = &BigNumber::new(421) == &BigNumber::new(525);
+        assert_eq!(result, false);
+    }
+
+    #[test]
+    fn test_comparaison4() {
+        let result = &BigNumber::new(421) == &BigNumber::new_from_string("421");
+        assert_eq!(result, true);
     }
 
     #[test]

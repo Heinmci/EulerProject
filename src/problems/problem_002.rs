@@ -3,10 +3,10 @@ use common::big_number::BigNumber;
 
 pub fn solve(limit: u64) -> u64 {
     Fibonacci::new().into_iter()
-                    .take_while(|x| x.to_number() <= limit)
+                    .take_while(|x| x.to_number().unwrap() <= limit)
                     .filter(|x| x.is_even())
                     .fold(BigNumber::new(0), |acc, x| &acc + &x)
-                    .to_number()
+                    .to_number().unwrap()
 }
 
 #[cfg(test)]
