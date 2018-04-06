@@ -1,7 +1,8 @@
 pub fn solve(mut number: u32) -> u32 {
     let original_number = number;
+    let test: Vec<u32> = (1..21).rev().collect();
     'outer: loop {
-        for i in 1..21 {
+        for i in &test {
             if number % i != 0 {
                 number += original_number;
                 continue 'outer;
